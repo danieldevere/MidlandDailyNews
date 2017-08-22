@@ -1,0 +1,4 @@
+upload/uploads
+upload/progress.json
+upload/.htaccess
+upload/.htpasswd
