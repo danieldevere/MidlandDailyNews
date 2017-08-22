@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Upload Spreadsheet</title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="upload.js"></script>
+        <style>
+        .notransition {
+            -webkit-transition: none !important;
+            -moz-transition: none !important;
+            -ms-transition: none !important;
+            -o-transition: none !important;
+            transition: none !important;
+        }​
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="">MDN Upload</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="nav navbar-nav">
+                        <li><a href="/MDNSearch" target="_blank">Search Site</a></li>
+                        <li><a href="http://www2.midland-mi.org/newspaper/MDNindex.htm" target="_blank">Raw Data</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="col-sm-4">
+                <form id="uploadForm" action="submit.php" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input class="form-control" type="hidden" name="MAX_FILE_SIZE" value="10240000">
+                        <label for="upload">Upload your file</label>                    
+                        <input type="file" name="xlsfile" id="upload" />
+                        <label for="year">Year</label>
+                        <input class="form-control" type="text" name="year" id="year">
+                    </div>
+                    <button id="uploadFormSubmit" type="button" class="btn btn-default">Upload</button>
+                </form>
+            </div>
+            <div class="col-sm-8">
+                <h2>List of Files Uploaded</h2>
+                    <table class="table" id="filesTable">
+                    </table>
+                    <button type="button" class="btn btn-default" id="removeButton">Remove</button>
+            </div>
+        </div>
+        <!-- Modals -->
+        <div id="workingModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="workingModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="workingModalLabel">Working on <span id="workingTitle"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="progress">
+                            <div id="progressor" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+                                <span id="percentage"class="sr-only">0% Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div id="processModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="processModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="processModalLabel">Choose File Type for <span id="processName"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <button id="articleButton" type="button" class="btn btn-block btn-primary">Article</button>
+                        <button id="obitButton" type="button" class="btn btn-block btn-success">Obituary</button>
+                        <button id="weddingButton" type="button" class="btn btn-block btn-warning">Weddings-Anniversaries</button>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <div id="successModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="successModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="successModalLabel">Success</h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-success" id="successOK">OK</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    </body>
+</html>

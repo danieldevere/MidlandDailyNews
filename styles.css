@@ -1,0 +1,67 @@
+.footer {
+
+
+
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 100px;
+  padding: 0;
+  line-height: 95px;
+  background-color: #ced2db;
+}
+@media screen and (min-width: 768px) {
+    .footer {
+       /* position: absolute;*/
+    }
+}
+.label {
+    margin: 5px;
+    font-size: 16px;
+    display: block;
+    cursor: pointer;
+}
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+}
+.wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -100px; /* the bottom margin is the negative value of the footer's height */
+}
+.footer, .push {
+    height: 100px; /* .push must be the same height as .footer */
+}
+#articleSearch {
+    margin-bottom: 20px;
+}
+
+table.tablesorter thead tr th.sort.headerSortUp:before,
+table.tablesorter thead tr th.sort.headerSortDown:before,
+table.tablesorter thead tr th.sort.header:before {
+  font-family: FontAwesome;
+}
+table.tablesorter thead tr th.sort.header:before {
+  content: "\f0dc";
+}
+table.tablesorter thead tr th.sort.headerSortUp:before {
+  content: "\f0dd";
+}
+table.tablesorter thead tr th.sort.headerSortDown:before {
+  content: "\f0de";
+}
+#obitSearchSubmit {
+    margin-top: 10px;
+}
+.sort {
+    cursor: pointer;
+}
+#top {
+    background-color: #25543b !important;
+}
+#headerImage {
+    margin-left: 20px;
+}

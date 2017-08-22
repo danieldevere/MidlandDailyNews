@@ -1,0 +1,34 @@
+# This is a sample .htaccess file.  The actual file needs to be named .htaccess
+# I recommend making a copy of this file for reference before changing anything
+
+# ALL THESE LINES WITH # ARE CALLED COMMENTS AND THEY WON'T BE RUN
+# THE ONLY LINES OF THIS FILE THAT WILL RUN DON'T BEGIN WITH #
+
+# This .htaccess file is used to require passwords for the upload portion of the site
+
+# It must be used along with a .htpasswd file which stores the password
+# See .htpasswd.sample to learn how to make .htpasswd file
+
+# Configuring this file and putting it in a folder of your server will password protection
+# that folder
+
+# AuthUserFile - This must be the full directory path to the .htpasswd file
+# Create a new file on the server in the same folder as index.html named fullPath.php 
+# and copy the following to find your full directory path
+#   <?php
+#       $dir = dirname(__FILE__);
+#       echo "<p>Full path to this dir: " . $dir . "</p>";
+#       echo "<p>Full path to a .htpasswd file in this dir: " . $dir . "/.htpasswd" . "</p>";
+#   ?>
+# Then open the website and type /fullPath.php at the end of the url 
+# For more information: http://www.htaccesstools.com/articles/full-path-to-file-using-php/
+
+AuthUserFile /full/path/to/your/.htpasswd
+
+# These are the final values to use here
+# For more information: http://www.htaccesstools.com/articles/password-protection/
+AuthGroupFile /dev/null
+AuthName EnterPassword
+AuthType Basic
+
+require valid-user

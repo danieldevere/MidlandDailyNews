@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Grace A. Dow Memorial Library News and Obituary Search</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="styles.css">
+        <script type="text/javascript" src="tablesort/jquery.tablesorter.min.js"></script> 
+
+        <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+        <script src="main.js"></script>
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+            ga('create', 'UA-101115016-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="header hidden-xs" id="top">
+                <a target="_blank" href="http://www.cityofmidlandmi.gov/">
+                    <img id="headerImage" src="img/MDNBanner.png">
+                </a>
+            </div>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="">MDN Search</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="nav navbar-nav">
+                        <li><a href="http://www2.midland-mi.org/newspaper/MDNindex.htm" target="_blank">Raw Data</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#" class="printButton" id="printButton" style="display: none;">Print</a></li>
+                        <li><a href="#" id="viewPrints">View Prints</a></li>
+                    </ul>
+                    <form id="printForm" action="generatePDF.php" method="POST" target="_blank">
+                        <input type="hidden" id="articleData" name="articles">
+                        <input type="hidden" id="weddingData" name="weddings">
+                        <input type="hidden" id="obituaryData" name="obituaries">
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+           
+            <div class="col-sm-6">
+                 <h2>Personal Index Search</h2>
+                 <p>(Find Wedding/Anniversary Announcements and Obituaries)</p>
+                <form id="obitSearch" onsubmit="ga('send', 'event', 'Personal Search', 'Search', 'Label');">
+                <div class="form-group">
+                    <label for="lastname">Last Name (Required)</label>
+                    <input required type="text" name="lastname" class="form-control" id="lastname" placeholder="Last Name">
+                </div>
+                <div class="form-group">
+                    <label for="firstname">First Name</label>
+                    <input type="text" name="firstname" class="form-control" id="firstname" placeholder="First Name">
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label>Search Type</label>
+                        <select id="searchType" class="form-control" name="searchType">
+                            <option value="obituaries">Obituaries</option>
+                            <option value="weddings">Wedding/Anniversary</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" id="obitSearchSubmit" class="btn btn-default">Search</button>
+                </form>
+            </div>
+
+            
+            <div class="col-sm-6">
+                <h2>News Article Search</h2>
+                <form id="articleSearch" onsubmit="ga('send', 'event', 'News Search', 'Search', 'Label');">
+                    <div class="form-group">
+                        <label for="headlineKeyword">Headline Keyword</label>
+                        <input type="text" name="headlineKeyword" class="form-control" id="headlineKeyword" placeholder="Headline Keyword">
+                    </div>
+                    <h4>Narrow by years</h4>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>From</label>
+                                <input type="text" class="form-control" name="startyear" id="startyear" placeholder="From">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>To</label>
+                                <input type="text" class="form-control" id="endyear" name="endyear" placeholder="To">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-12 well">
+                            <h4 class="text-center">Subjects</h4>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <button type="button" class="btn btn-block btn-primary" data-toggle="modal" data-target="#subjectModal">Add Subjects</button>
+                                </div>
+                                <div class="col-sm-6"> 
+                                    <button type="button" id="clearSubjects" class="btn btn-block btn-danger">Clear Subjects</button>
+                                </div>
+                            </div>
+                            <h5 class="text-center">(Added Subjects)</h5>
+                            <div id="subjectList">
+                            </div>
+                        </div>
+                        <div class="modal fade" tabindex="-1" role="dialog" id="subjectModal">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">Add Subjects</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="text-center">
+                                                <div class="col-xs-6 col-xs-offset-3">
+                                                    <div class="form-group" id="searchbox">
+                                                        <label>Search</label>
+                                                        <input type="text" id="subject" class="form-control" placeholder="e.g. Accidents">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-6 text-center">
+                                                <h4>All Subjects</h4>
+                                                <p>(Click to Add)</p>
+                                                <div id="notSelected">
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-6 text-center">
+                                                <h4>Selected Subjects</h4>
+                                                <p>(Click to Remove)</p>
+                                                <div id="isSelected">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                       <!-- <button type="button" onclick="clearSubjects()" id="clearSubjects" class="btn btn-danger">Clear Subjects</button>-->
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                    </div>
+                    <button type="submit" class="btn btn-default">Search</button>
+                </form>
+            </div>
+            <div class="modal fade" id="resultsModal" data-toggle="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                            <h4 class="modal-title">Search Results</h4>
+                        </div>
+                        <div class="modal-body table-responsive" id="resultsHere">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="printModal" data-toggle="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                            <h4 class="modal-title">Print Queue</h4>
+                        </div>
+                        <div class="modal-body table-responsive" id="printsHere">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="afterPrintModal" data-toggle="modal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Printed</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Would you like to remove printed items from your list?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" id="afterPrintRemove">Yes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="push"></div>
+        </div>
+        <footer class="footer container">
+                <div class="container">
+                    <span class="text-muted" style="font-size: 13px;">Grace A. Dow Memorial Library</span>
+                </div>
+        </footer>
+    </body>
+</html>
