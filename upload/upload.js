@@ -1,6 +1,34 @@
 $(document).ready(function() {
     // Classes
-    function File(filename, type, uploaddate, id) {
+
+    function FileYear(year) {
+        this.year = year;
+        this.files = [];
+        this.row = function() {
+            var string = '<tr><td><input data-id="' + this.year + '" type="checkbox" id="removeFile"></td><td>' + this.files[0].uploaddate + '</td><td>' + this.year + '</td>';
+            var containsObits = 'No';
+            var containsNews = 'No';
+            var containsWeddings = 'No';
+            
+            for(var i = 0; i < this.files.length; i++) {
+                if(this.files[i].type == 'Obituary') {
+                    containsObits = 'Yes';
+                }
+                if(this.files[i].type == 'Weddings-Anniversaries') {
+                    containsWeddings = 'Yes';
+                }
+                if(this.files[i].type == 'Article') {
+                    containsNews = 'Yes';
+                }
+            }
+            string += '<td>' + containsObits + '</td><td>' + containsNews + '</td><td>' + containsWeddings + '</td></tr>';
+            return string;
+
+        };
+    }
+
+    function File(filename, type, uploaddate, id, year) {
+        this.year = year;
         this.filename = filename;
         this.type = type;
         this.uploaddate = uploaddate;
@@ -26,11 +54,25 @@ $(document).ready(function() {
             url: "files.php",
             success: function(data) {
                 var files = JSON.parse(data);
-                var htmlString = '<tr><th></th><th>Upload Date</th><th>File Name</th><th>Type</th></tr>';
+                var fileYears = [];
+                var htmlString = '<tr><th></th><th>Upload Date</th><th>Year</th><th>Obituaries</th><th>Articles</th><th>Weddings/Anniversaries</th></tr>';
                 for(x in files) {
-                    var thisFile = new File(files[x].filename, files[x].type, files[x].uploaddate, files[x].id);
-                    fileList.push(thisFile);
-                    htmlString += thisFile.row();
+                    var yearExists = false;
+                    var thisFile = new File(files[x].filename, files[x].type, files[x].uploaddate, files[x].id, files[x].year);
+                    for(j in fileYears) {
+                        if(thisFile.year == fileYears[j].year) {
+                            yearExists = true;
+                            fileYears[j].files.push(thisFile);
+                        }
+                    }
+                    if(!yearExists) {
+                        var thisYear = new FileYear(thisFile.year);
+                        thisYear.files.push(thisFile);
+                        fileYears.push(thisYear);
+                    }
+                }
+                for(a in fileYears) {
+                    htmlString += fileYears[a].row();
                 }
                 document.getElementById("filesTable").innerHTML = htmlString;
             }
@@ -139,7 +181,7 @@ $(document).ready(function() {
         $.ajax({
             url: 'processNews.php',
             type: 'POST',
-            data: {filesent: year + '/articles' + year + '.csv'},
+            data: {year: year},
             success: function(data) {
                 debugger;
                 uploadFinished();
@@ -148,7 +190,7 @@ $(document).ready(function() {
                 $.ajax({
                     url: 'process.php',
                     type: 'POST',
-                    data: {filesent: year + '/obituaries' + year + '.csv'},
+                    data: {year: year},
                     success: function(data) {
                         debugger;
                         uploadFinished();
@@ -157,7 +199,7 @@ $(document).ready(function() {
                         $.ajax({
                             url: 'processWeddings.php',
                             type: 'POST',
-                            data: {filesent: year + '/weddings-anniversaries' + year + '.csv'},
+                            data: {year: year},
                             success: function(data) {
                                 debugger;
                                 uploadFinished();
