@@ -1,25 +1,67 @@
 <?php
 
-   /* set_time_limit(600);
+    set_time_limit(600);
 	file_put_contents('progress.json', json_encode(array('percentComplete'=>0)));
-	$servername = 'localhost';
-	$username = 'root';
-	$password = '';
-	$dbname = 'obits2';
+    $config = include('config.php');
+	$servername = $config['servername'];
+	$username = $config['username'];
+	$password = $config['password'];
+	$dbname = $config['dbname'];
 
     try{
         $conn = new PDO("mysql:charset=utf8;host=$servername;dbname=$dbname", $username, $password);
 		$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        if(!empty($_POST['data'])) {
-            $files = json_decode($_POST['data']);
+        $files = array();
+        if(!empty($_POST['ids'])) {
+            $files = json_decode($_POST['ids'], true);
         } else {
             throw new Exception("Didn't send data");
         }
         ini_set('auto_detect_line_endings', TRUE);        
         $currentPercent = 0.0;
         $percentPerFile = 100 / count($files);
+        $stmtFiles = $conn->prepare('SELECT * FROM Files WHERE id=:id');
+        $obitDelete = $conn->prepare('DELETE FROM Obituaries WHERE fileID=:fileID');
+        $obitDelete->bindParam(':fileID', $fileID);
+        $newsDelete = $conn->prepare('DELETE FROM News WHERE fileID=:fileID');
+        $newsDelete->bindParam(':fileID', $fileID);
+        $weddingsDelete = $conn->prepare('DELETE FROM Weddings WHERE fileID=:fileID');
+        $weddingsDelete->bindParam(':fileID', $fileID);
+        $fileDelete = $conn->prepare('DELETE FROM Files WHERE id=:id');
+        $fileDelete->bindParam(':id', $fileID);
+        $stmtFiles->bindParam(':id', $id);
+        for($i=0;$i<count($files);$i++) {
+            $id = $files[$i];
+            $stmtFiles->execute();
+            $result = $stmtFiles->fetch(PDO::FETCH_ASSOC);
+            echo $result['type'];
+            $fileID = $result['id'];
+            if($result['type'] == 'Weddings-Anniversaries') {
+                echo 'weddings' . $result['id'];
+                $weddingsDelete->execute();
+                $fileDelete->execute();
+            } elseif($result['type'] == 'Article') {
+                echo 'news' . $result['id'];
+                $newsDelete->execute();
+                $fileDelete->execute();
+            } elseif($result['type'] == 'Obituary') {
+                echo 'obit' . $result['id'];
+                $obitDelete->execute();
+                $fileDelete->execute();
+            }
+        }
+    } catch(PDOException $e) {
+        echo 'mySQL error: ' . $e->getMessage();
+    }
+    catch(Exception $e) {
+        echo $e->getMessage();
+    }
+        
+        /*
         for($j=0;$j<count($files);$j++) {
+            
             $currentdir = getcwd();
+
             $filepath = $currentdir . '/uploads/' . $files[$j]->filename . '.csv';
             $fileLength = count(file($filepath));
             $percentPerRow = $percentPerFile / $fileLength;
@@ -124,9 +166,9 @@
     }
     catch(Exception $e) {
         echo $e->getMessage();
-    }*/
+    }
 
-    /*
+    
     }
     $mysqli->close();
     session_destroy();
@@ -157,7 +199,7 @@
         for($j=0;$j<count($files);$j++) {
             $currentdir = getcwd();
             $target = $currentdir . '/uploads/' . $files[$j]->filename . '.csv';
-            /*$file = new SplFileObject($target, 'r');
+            $file = new SplFileObject($target, 'r');
             $file->seek(PHP_INT_MAX);
             $fileLength = $file->key() + 1;
         //    echo $fileLength;

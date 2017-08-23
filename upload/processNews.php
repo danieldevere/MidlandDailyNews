@@ -48,8 +48,9 @@
 			$stmtFileInsert->execute();
 			$fileSelect = $conn->prepare('SELECT id FROM Files WHERE filename=:filename1');
 			$fileSelect->bindParam(':filename1', $filename);
-			$fileIDSearch = $fileSelect->execute();
-			$stmtInsert = $conn->prepare("INSERT IGNORE INTO News (subject, article, page, articledate, fileID) VALUES (:subject, :article, :page, :articledate," . $fileIDSearch . ")");
+			$fileSelect->execute();
+			$fileIDSearch = $fileSelect->fetch(PDO::FETCH_ASSOC);
+			$stmtInsert = $conn->prepare("INSERT IGNORE INTO News (subject, article, page, articledate, fileID) VALUES (:subject, :article, :page, :articledate," . $fileIDSearch['id'] . ")");
 			$stmtInsert->bindParam(':subject', $subject);
 			$stmtInsert->bindParam(':article', $article);
 			$stmtInsert->bindParam(':page', $page);

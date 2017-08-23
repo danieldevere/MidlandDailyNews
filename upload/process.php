@@ -50,11 +50,11 @@
 			$stmtFileInsert->execute();
 			$fileSelect = $conn->prepare('SELECT id FROM Files WHERE filename=:filename1');
 			$fileSelect->bindParam(':filename1', $filename);
-			$fileIDSearch = $fileSelect->execute();
-			echo $fileIDSearch;
+			$fileSelect->execute();
+			$fileIDSearch = $fileSelect->fetch(PDO::FETCH_ASSOC);
 			$stmtInsert = $conn->prepare("INSERT IGNORE INTO Obituaries 
 				(lastname, firstname, birthdate, deathdate, obitdate, page, fileID)
-				VALUES (:lastname, :firstname, :birthdate, :deathdate, :obitdate, :page, " . $fileIDSearch . ")"
+				VALUES (:lastname, :firstname, :birthdate, :deathdate, :obitdate, :page, " . $fileIDSearch['id'] . ")"
 			);
 			$stmtInsert->bindParam(':lastname', $lastname);
 			$stmtInsert->bindParam(':firstname', $firstname);

@@ -50,10 +50,11 @@
 			$stmtFileInsert->execute();
 			$fileSelect = $conn->prepare('SELECT id FROM Files WHERE filename=:filename1');
 			$fileSelect->bindParam(':filename1', $filename);
-			$fileIDSearch = $fileSelect->execute();
+			$fileSelect->execute();
+			$fileIDSearch = $fileSelect->fetch(PDO::FETCH_ASSOC);
 			$stmtInsert = $conn->prepare("INSERT IGNORE INTO Weddings 
 				(lastname, firstname, announcement, weddingdate, articledate, page, fileID) 
-				VALUES (:lastname, :firstname, :announcement, :weddingdate, :articledate, :page," . $fileIDSearch . ")"
+				VALUES (:lastname, :firstname, :announcement, :weddingdate, :articledate, :page," . $fileIDSearch['id'] . ")"
 			);
 			$stmtInsert->bindParam(':lastname', $lastname);
 			$stmtInsert->bindParam(':firstname', $firstname);

@@ -4,13 +4,14 @@ $(document).ready(function() {
     function FileYear(year) {
         this.year = year;
         this.files = [];
-        this.row = function() {
-            var string = '<tr><td><input data-id="' + this.year + '" type="checkbox" id="removeFile"></td><td>' + this.files[0].uploaddate + '</td><td>' + this.year + '</td>';
+        this.row = function(arrayIndex) {
+            
             var containsObits = 'No';
             var containsNews = 'No';
             var containsWeddings = 'No';
-            
+            var fileIds = [];
             for(var i = 0; i < this.files.length; i++) {
+                fileIds.push(this.files[i].id);
                 if(this.files[i].type == 'Obituary') {
                     containsObits = 'Yes';
                 }
@@ -21,6 +22,7 @@ $(document).ready(function() {
                     containsNews = 'Yes';
                 }
             }
+            var string = '<tr><td><input data-row="' + arrayIndex + '" type="checkbox" id="removeFile"></td><td>' + this.files[0].uploaddate + '</td><td>' + this.year + '</td>';
             string += '<td>' + containsObits + '</td><td>' + containsNews + '</td><td>' + containsWeddings + '</td></tr>';
             return string;
 
@@ -47,14 +49,14 @@ $(document).ready(function() {
     window.progressInterval;
     // Load file list
     loadFileList();
-
+    var fileYears = [];
     // functions
     function loadFileList() {
         $.ajax({
             url: "files.php",
             success: function(data) {
                 var files = JSON.parse(data);
-                var fileYears = [];
+                fileYears = [];
                 var htmlString = '<tr><th></th><th>Upload Date</th><th>Year</th><th>Obituaries</th><th>Articles</th><th>Weddings/Anniversaries</th></tr>';
                 for(x in files) {
                     var yearExists = false;
@@ -72,7 +74,7 @@ $(document).ready(function() {
                     }
                 }
                 for(a in fileYears) {
-                    htmlString += fileYears[a].row();
+                    htmlString += fileYears[a].row(a);
                 }
                 document.getElementById("filesTable").innerHTML = htmlString;
             }
@@ -176,14 +178,11 @@ $(document).ready(function() {
     var weddingsFinished = false;
     var obitsFinished = false;
     function processFiles(year) {
-
-        debugger;
         $.ajax({
             url: 'processNews.php',
             type: 'POST',
             data: {year: year},
             success: function(data) {
-                debugger;
                 uploadFinished();
             //   articlesFinished = true;
             //    finished();
@@ -192,7 +191,6 @@ $(document).ready(function() {
                     type: 'POST',
                     data: {year: year},
                     success: function(data) {
-                        debugger;
                         uploadFinished();
                       //  obitsFinished = true;
                      //   finished();
@@ -201,7 +199,6 @@ $(document).ready(function() {
                             type: 'POST',
                             data: {year: year},
                             success: function(data) {
-                                debugger;
                                 uploadFinished();
                                 $("#workingModal").modal('hide');
                                 $("#successModal").modal('show');
@@ -209,7 +206,6 @@ $(document).ready(function() {
                             //    finished();
                             },
                             error: function(data) {
-                                debugger;
                                 clearInterval(window.progressInterval);
                                 window.alert('error');
                                 console.log(JSON.stringify(data));
@@ -297,23 +293,30 @@ $(document).ready(function() {
         uploadInProgress();  
     });
     $("#removeButton").click(function() {
-        debugger;
         var deleteList = [];
         var list = $('#removeFile:checked').map(function() {
-            return $(this).data('id');
+            return $(this).data('row');
         }).get();
-        for(x in list) {
+        console.log(list);
+        for(var j = 0; j < list.length; j++) {
+            for(var k = 0; k < fileYears[list[j]].files.length; k++) {
+                deleteList.push(fileYears[list[j]].files[k].id);
+            }
+        }
+        console.log(deleteList);
+        /*for(x in list) {
+
             var item = fileList.find(function(a) {
                 return a.id == list[x];
             });
             deleteList.push(item);
-        }
+        }*/
         $.ajax({
             url: 'remove.php',
-            data: {data: JSON.stringify(deleteList)},
+            data: {ids: JSON.stringify(deleteList)},
             type: 'POST',
             success: function(data) {
-                debugger;
+                console.log(data);
                 clearInterval(window.progressInterval);
                 $("#workingModal").modal('hide');
                 $("#successModal").modal('show');
